@@ -2,8 +2,8 @@
 
 #define N_SENSORES 16
 
-#define LIMIAR_PERTO 800
-#define LIMIAR_LONGE 1500
+#define LIMIAR_PERTO 600
+#define LIMIAR_LONGE 1200
 
 #define PERTO 0
 #define MEDIO 1
@@ -43,7 +43,7 @@ void _start(void)
 
 
 
-  //inicializa(distances);
+  inicializa(distances);
 
   /* O codigo do robo deve repetir infinitamente */
   while(REPETICAO_INFINITA) {
@@ -104,7 +104,7 @@ void inicializa(unsigned int *distances) {
 /* Anda rapidamente pra frente */
 void retoRapido() {
 
-  set_speed_motors(25,25);
+  set_speed_motors(30,30);
 }
 
 /* Anda devagar para frente */
@@ -181,7 +181,7 @@ int testaSentidoGiro(unsigned int *distances) {
 
   int i;  
 
-  //read_sonars(distances);
+  read_sonars(distances);
 
   /* Testa os sonares do sentido horario sentido horario */
   for(i = 5; i <= 11; i++) {

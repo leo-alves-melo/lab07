@@ -1,9 +1,9 @@
 #include "api_robot.h" /* Robot control API */
 
-#define N_SENSORES 15
+#define N_SENSORES 16
 
-#define LIMIAR_PERTO 600
-#define LIMIAR_LONGE 1200
+#define LIMIAR_PERTO 800
+#define LIMIAR_LONGE 1500
 
 #define PERTO 0
 #define MEDIO 1
@@ -39,10 +39,48 @@ void _start(void)
 {
   unsigned int distances[N_SENSORES];
   int distancia;
-  int sentidoGiro;
-	
-	while(1)
-  		read_sonar(1);
+  int sentidoGiro;	
+
+
+
+  //inicializa(distances);
+
+  /* O codigo do robo deve repetir infinitamente */
+  while(REPETICAO_INFINITA) {
+
+    distancia = testaFrente();
+
+    /* Enquanto o obstaculo a frente nao estiver perto, segue reto rapidamente */
+    while(distancia != PERTO) {
+
+      if(distancia == LONGE) {
+        retoRapido();
+      }
+      if(distancia == MEDIO) {
+        retoDevagar();
+
+        sentidoGiro = testaGiroMovimento();
+
+        desvia(sentidoGiro);
+      }
+      
+      /* Atualiza a distancia a frente */
+      distancia = testaFrente();
+    }
+
+    /* Com obstaculo proximo, ele deve parar e achar um espaco vazio */
+    stop();    
+
+    sentidoGiro = testaSentidoGiro(distances);
+
+    /* Gira ateh encontrar a saida */
+    while(read_sonar(3) < LIMIAR_PERTO && read_sonar(4) < LIMIAR_PERTO) {
+      gira(sentidoGiro);
+    } 
+    
+
+  }
+
   
 }
 
@@ -66,7 +104,7 @@ void inicializa(unsigned int *distances) {
 /* Anda rapidamente pra frente */
 void retoRapido() {
 
-  set_speed_motors(30,30);
+  set_speed_motors(25,25);
 }
 
 /* Anda devagar para frente */
@@ -143,7 +181,7 @@ int testaSentidoGiro(unsigned int *distances) {
 
   int i;  
 
-  read_sonars(distances);
+  //read_sonars(distances);
 
   /* Testa os sonares do sentido horario sentido horario */
   for(i = 5; i <= 11; i++) {
